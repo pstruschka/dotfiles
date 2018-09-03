@@ -1,0 +1,411 @@
+* Interface
+  #+BEGIN_SRC emacs-lisp
+    (setq inhibit-startup-screen t)
+    (scroll-bar-mode -1)
+    (tool-bar-mode -1)
+    (defalias 'yes-or-no-p 'y-or-n-p)
+  #+END_SRC  
+  Line numbers
+  #+BEGIN_SRC emacs-lisp
+    (use-package nlinum
+      :ensure t
+      :hook (prog-mode . nlinum-mode))
+  #+END_SRC
+* Backup
+  #+BEGIN_SRC emacs-lisp 
+    (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
+          backup-by-copying t    ; Don't delink hardlinks
+          version-control t      ; Use version numbers on backups
+          delete-old-versions t  ; Automatically delete excess backups
+          kept-new-versions 20   ; how many of the newest versions to keep
+          kept-old-versions 5    ; and how many of the old
+          )
+  #+END_SRC
+* Set up ido
+  #+BEGIN_SRC emacs-lisp
+    (setq ido-enable-flex-matching t)
+    (setq ido-everywhere t)
+    (ido-mode 1)
+  #+END_SRC
+* Try
+  #+BEGIN_SRC emacs-lisp
+    (use-package try
+      :ensure t)
+  #+END_SRC
+* Diminish
+  #+BEGIN_SRC emacs-lisp
+    (use-package diminish
+      :ensure t)
+  #+END_SRC
+* Which Key
+  #+BEGIN_SRC emacs-lisp
+    (use-package which-key
+      :ensure t
+      :hook (after-init . which-key-mode))
+  #+END_SRC
+
+* Avy
+  #+BEGIN_SRC emacs-lisp
+    (use-package avy
+      :ensure t
+      :bind (("C-:"   . avy-goto-char)
+             ("C-'"   . avy-goto-char-timer)
+             ("M-g g" . avy-goto-line)
+             ("M-g w" . avy-goto-word-1)))
+  #+END_SRC
+* Ace Window
+  #+BEGIN_SRC emacs-lisp
+    (use-package ace-window
+      :ensure t
+      :bind (("M-o" . ace-window)))
+  #+END_SRC
+
+* Swiper / Ivy / Counsel
+  #+BEGIN_SRC emacs-lisp
+    (use-package counsel
+      :ensure t
+      :bind (("M-x"     . counsel-M-x)
+             ("C-x C-f" . counsel-find-file)
+             ("<f1> f"  . counsel-describe-function)
+             ("<f1> v"  . counsel-describe-variable)
+             ("<f1> l"  . counsel-find-library)
+             ("<f1> i"  . counsel-info-lookup-symbol)
+             ("<f1> u"  . counsel-unicode-char)
+             ("C-c g"   . counsel-git)
+             ("C-c j"   . counsel-git-grep)
+             ("C-c k"   . counsel-ag)
+             ("C-x l"   . counsel-locate)))
+
+    (use-package ivy
+      :ensure t
+      :bind (("C-x b" . ivy-switch-buffer)
+             ("C-c C-r" . ivy-resume))
+      :config
+      (ivy-mode t)
+      (setq ivy-use-virtual-buffers t)
+      (setq ivy-display-style 'fancy)
+      (setq ivy-count-format "(%d/%d) "))
+
+    (use-package swiper
+      :ensure t
+      :bind (("C-s" . swiper)))
+  #+END_SRC
+
+* Projectile
+  #+BEGIN_SRC emacs-lisp
+    (use-package projectile
+      :ensure t
+      :init
+      :config
+      (projectile-mode)
+      (setq projectile-completion-system 'ivy))
+      (use-package counsel-projectile
+      :ensure t
+      :config
+      (add-hook 'after-init-hook 'counsel-projectile-mode))
+
+  #+END_SRC
+
+* Undo Tree
+  #+BEGIN_SRC emacs-lisp
+    (use-package undo-tree
+      :ensure t
+      :bind ("C-c u" . undo-tree-visualize)
+      :config
+      (global-undo-tree-mode))
+  #+END_SRC
+
+* IBuffer
+  #+BEGIN_SRC emacs-lisp
+    (use-package ibuffer
+      :bind ("C-x C-b" . ibuffer))
+  #+END_SRC
+
+* IEdit
+  #+BEGIN_SRC emacs-lisp
+    (use-package iedit
+      :ensure t)
+
+  #+END_SRC
+
+* Origami Folding
+  #+BEGIN_SRC emacs-lisp
+    (use-package origami
+      :ensure t)
+  #+END_SRC
+
+* Dumb Jump
+  #+BEGIN_SRC emacs-lisp
+    (use-package dumb-jump
+      :ensure t
+      :bind (("M-g o" . dumb-jump-go-other-window)
+       ("M-g j" . dumb-jump-go)
+       ("M-g x" . dumb-jump-go-prefer-external)
+       ("M-g z" . dumb-jump-go-prefer-external-other-window))
+      :config
+      (setq dumb-jump-selector 'ivy)
+      :init
+      (dumb-jump-mode))
+  #+END_SRC
+
+* Git
+  #+BEGIN_SRC emacs-lisp
+    (use-package magit
+      :ensure t
+      :bind ("C-x g" . magit-status))
+
+    (use-package git-gutter
+      :ensure t
+      :init
+      (global-git-gutter-mode +1))
+
+    (use-package git-timemachine
+      :ensure t)
+  #+END_SRC
+
+* Wgrep
+  #+BEGIN_SRC emacs-lisp
+    (use-package wgrep
+      :ensure t)
+
+    (use-package wgrep-ag
+      :ensure t)
+
+    (require 'wgrep-ag)
+  #+END_SRC
+
+* fzf
+  #+BEGIN_SRC emacs-lisp
+    (use-package fzf
+      :ensure t)
+  #+END_SRC
+
+* Parens and Indent
+  #+BEGIN_SRC emacs-lisp
+    (use-package smartparens
+      :ensure t
+      :diminish smartparens-mode
+      :hook (prog-mode . smartparens-mode))
+
+    (use-package rainbow-delimiters
+      :ensure t
+      :diminish rainbow-delimiters-mode
+      :hook (prog-mode . rainbow-delimiters-mode))
+
+    (use-package aggressive-indent
+      :ensure t)
+
+
+    (setq show-paren-delay 0)
+    (show-paren-mode 1)
+
+    (add-hook 'prog-mode-hook 'electric-pair-mode)
+  #+END_SRC
+
+* Company
+  #+BEGIN_SRC emacs-lisp
+    (use-package company
+      :ensure t
+      :diminish
+      :hook (after-init . global-company-mode))
+  #+END_SRC
+
+* Flycheck
+  #+BEGIN_SRC emacs-lisp
+    (use-package flycheck
+      :ensure t
+      :diminish
+      :init (global-flycheck-mode))
+  #+END_SRC
+
+* Yasnippet
+  #+BEGIN_SRC emacs-lisp
+    (use-package yasnippet
+      :ensure t
+      :init
+  (yas-global-mode 1))
+
+    (use-package yasnippet-snippets
+      :ensure t)
+    (use-package auto-yasnippet
+      :ensure t)
+  #+END_SRC
+
+* Misc
+  #+BEGIN_SRC emacs-lisp
+    (use-package multiple-cursors
+      :ensure t)
+
+    (use-package expand-region
+      :ensure t
+      :bind ("C-=" . er/expand-region))
+
+    (use-package exec-path-from-shell
+      :ensure t
+      :config
+      (exec-path-from-shell-initialize))
+  #+END_SRC
+
+* Treemacs
+  #+BEGIN_SRC emacs-lisp
+    (use-package treemacs
+      :ensure t
+      :defer t
+      :init
+      (with-eval-after-load 'winum
+        (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+      :config
+      (progn
+        (setq treemacs-collapse-dirs              (if (executable-find "python") 3 0)
+              treemacs-file-event-delay           5000
+              treemacs-follow-after-init          t
+              treemacs-follow-recenter-distance   0.1
+              treemacs-goto-tag-strategy          'refetch-index
+              treemacs-indentation                2
+              treemacs-indentation-string         " "
+              treemacs-is-never-other-window      nil
+              treemacs-no-png-images              nil
+              treemacs-project-follow-cleanup     nil
+              treemacs-persist-file               (expand-file-name ".cache/treemacs-persist" user-emacs-directory)
+              treemacs-recenter-after-file-follow nil
+              treemacs-recenter-after-tag-follow  nil
+              treemacs-show-hidden-files          t
+              treemacs-silent-filewatch           nil
+              treemacs-silent-refresh             nil
+              treemacs-sorting                    'alphabetic-desc
+              treemacs-space-between-root-nodes   t
+              treemacs-tag-follow-cleanup         t
+              treemacs-tag-follow-delay           1.5
+              treemacs-width                      40)
+
+        ;; The default width and height of the icons is 22 pixels. If you are
+        ;; using a Hi-DPI display, uncomment this to double the icon size.
+        ;;(treemacs-resize-icons 44)
+
+        (treemacs-follow-mode t)
+        (treemacs-filewatch-mode t)
+        (treemacs-fringe-indicator-mode t)
+        (pcase (cons (not (null (executable-find "git")))
+                     (not (null (executable-find "python"))))
+          (`(t . t)
+           (treemacs-git-mode 'extended))
+          (`(t . _)
+           (treemacs-git-mode 'simple))))
+      :bind
+      (:map global-map
+            ("M-0"       . treemacs-select-window)
+            ("C-x t 1"   . treemacs-delete-other-windows)
+            ("C-x t t"   . treemacs)
+            ("C-x t B"   . treemacs-bookmark)
+            ("C-x t C-t" . treemacs-find-file)
+            ("C-x t M-t" . treemacs-find-tag)))
+
+    (use-package treemacs-projectile
+      :after treemacs projectile
+      :ensure t)
+  #+END_SRC
+* Theme and Modeline
+  Icons
+  #+BEGIN_SRC emacs-lisp
+    (use-package all-the-icons
+      :ensure t)
+  #+END_SRC
+  Get themes
+  #+BEGIN_SRC emacs-lisp
+    (use-package color-theme-sanityinc-solarized
+      :ensure t)
+    (use-package solarized-theme
+      :ensure t)
+    ;(use-package spacemacs-theme
+    ;  :ensure t)
+    (use-package base16-theme
+      :ensure t)
+    (use-package color-theme-modern
+      :ensure t)
+    (use-package zenburn-theme
+      :ensure t)
+    (use-package dracula-theme
+      :ensure t)
+  #+END_SRC
+
+  Select theme
+  #+BEGIN_SRC emacs-lisp
+    (load-theme 'solarized-dark t)
+  #+END_SRC
+
+  #+BEGIN_SRC emacs-lisp
+    (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
+  #+END_SRC
+  
+  Modeline
+  #+BEGIN_SRC emacs-lisp
+    (use-package doom-modeline
+      :ensure all-the-icons
+      :ensure t
+      :hook (after-init . doom-modeline-init))
+  #+END_SRC
+* Languages
+
+** Web
+   #+BEGIN_SRC emacs-lisp
+     (use-package web-mode
+       :ensure t)
+   #+END_SRC
+** Javascript
+   #+BEGIN_SRC emacs-lisp
+     (use-package js2-mode
+       :ensure t
+       :mode "\\.js\\'"
+       :config
+       (setq-default js2-ignored-warnings '("msg.extra.trailing.comma")))
+
+     (use-package js2-refactor
+       :ensure t
+       :config
+       (js2r-add-keybindings-with-prefix "C-c C-m")
+       (add-hook 'js2-mode-hook 'js2-refactor-mode))
+
+     (use-package rjsx-mode
+       :ensure t)
+
+     (use-package prettier-js
+       :ensure t
+       :config
+       (setq prettier-js-args '(
+             "--trailing-comma" "es5"
+             "--single-quote" "true"
+             "--print-width" "100"
+             ))
+       (add-hook 'js2-mode-hook 'prettier-js-mode)
+       (add-hook 'rjsx-mode-hook 'prettier-js-mode))
+     (use-package json-mode
+       :ensure t)
+   #+END_SRC
+      
+** C/C++
+   #+BEGIN_SRC emacs-lisp
+     (use-package cmake-mode
+       :ensure t)
+
+     (use-package cmake-ide
+       :ensure t)
+
+     ;(use-package rtags
+     ;  :ensure t)
+     ;(use-package ivy-rtags
+     ;  :ensure t)
+     ;(use-package company-rtags
+     ;  :ensure t)
+     ;(use-package flycheck-rtags
+     ;  :ensure t)
+   #+END_SRC
+** RUST
+   #+BEGIN_SRC emacs-lisp
+     (use-package rust-mode
+       :ensure t)
+     (use-package flycheck-rust
+       :ensure t)
+     (use-package cargo
+       :ensure t
+       :hook (rust-mode . cargo-minor-mode))
+   #+END_SRC
