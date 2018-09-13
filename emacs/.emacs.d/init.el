@@ -36,7 +36,7 @@
     ("44961a9303c92926740fc4121829c32abca38ba3a91897a4eab2aa3b7634bed4" "fede08d0f23fc0612a8354e0cf800c9ecae47ec8f32c5f29da841fe090dfc450" "8e51e44e5b079b2862335fcc5ff0f1e761dc595c7ccdb8398094fb8e088b2d50" "7559ac0083d1f08a46f65920303f970898a3d80f05905d01e81d49bb4c7f9e39" default)))
  '(package-selected-packages
    (quote
-    (pkgbuild-mode zenburn-theme color-theme-modern base16-theme spacemacs-theme dumb-jump which-key use-package undo-tree try treemacs-projectile spaceline smartparens rainbow-delimiters org-plus-contrib nlinum magit ivy-hydra iedit fzf flycheck expand-region exec-path-from-shell doom-modeline diminish counsel-projectile company color-theme-sanityinc-solarized aggressive-indent))))
+    (racer yaml-mode pkgbuild-mode zenburn-theme color-theme-modern base16-theme spacemacs-theme dumb-jump which-key use-package undo-tree try treemacs-projectile spaceline smartparens rainbow-delimiters org-plus-contrib nlinum magit ivy-hydra iedit fzf flycheck expand-region exec-path-from-shell doom-modeline diminish counsel-projectile company color-theme-sanityinc-solarized aggressive-indent))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -3,3 +3,5 @@
 	name = Peter Son Struschka
 [color]
 	ui = true
+[core]
+	excludesfile = ~/.gitignore
