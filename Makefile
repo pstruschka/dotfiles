@@ -1,13 +1,15 @@
 all: emacs git i3wm vim x zsh
 
-clean: uninstall_emacs uninstall_git \
-       uninstall_i3wm uninstall_vim \
-       uninstall_x uninstall_zsh
+clean: uninstall_emacs uninstall_spacemacs \
+       uninstall_git uninstall_i3wm \
+       uninstall_vim uninstall_x uninstall_zsh
 
-.PHONY: emacs git i3wm vim x zsh
+.PHONY: emacs spacemacs git i3wm vim x zsh
 
 emacs:
 	stow -t ~ emacs
+spacemacs:
+	stow -t ~ spacemacs
 git:
 	stow -t ~ git
 i3wm:
@@ -21,6 +23,8 @@ zsh:
 
 uninstall_emacs:
 	stow -Dt ~ emacs
+uninstall_spacemacs:
+	stow -Dt ~ spacemacs
 uninstall_git:
 	stow -Dt ~ git
 uninstall_i3wm:

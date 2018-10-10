@@ -17,7 +17,7 @@
 ;==========================================================
 
 [colors]
-n;background = ${xrdb:color0:#222}
+;background = ${xrdb:color0:#222}
 background = #222
 background-alt = #444
 ;foreground = ${xrdb:color7:#222}
@@ -28,13 +28,13 @@ secondary = #e60053
 alert = #bd2c40
 
 [bar/topbar]
-;monitor = ${env:MONITOR:HDMI-1}
+monitor = ${env:MONITOR:eDP-1}
 width = 100%
 height = 30
 ;offset-x = 1%
 ;offset-y = 1%
 radius = 6.0
-fixed-center = false
+fixed-center = true
 
 background = ${colors.background}
 foreground = ${colors.foreground}
@@ -59,9 +59,9 @@ font-3 = "Font Awesome 5 Brands:style=Regular:pixelsize=8;1"
 font-4 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
 font-5 = "Font Awesome 5 Free:style=Solid:pixelsize=8;1"
 
-modules-left = i3 xwindow
+modules-left = hostname xwindow
 modules-center = spotify
-modules-right = filesystem backlight pulseaudio xkeyboard memory cpu wlan eth battery temperature date powermenu
+modules-right = taskwarrior
 
 tray-position = right
 tray-padding = 2
@@ -70,24 +70,82 @@ tray-padding = 2
 tray-scale = 1
 
 ;wm-restack = bspwm
-;wm-restack = i3
+wm-restack = i3
 
-;override-redirect = true
+override-redirect = false
 
 ;scroll-up = bspwm-desknext
 ;scroll-down = bspwm-deskprev
 
-;scroll-up = i3wm-wsnext
-;scroll-down = i3wm-wsprev
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
 
 cursor-click = pointer
 cursor-scroll = ns-resize
 
 
+[bar/topbar-second]
+monitor = ${env:MONITOR:eDP-1}
+width = 100%
+height = 30
+;offset-x = 1%
+;offset-y = 0
+;radius = 1.0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 10
+border-top-size = 0
+border-bottom-size = 0
+border-color = #00000000
+
+padding-left = 2
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = fixed:pixelsize=10;1
+font-1 = unifont:fontformat=truetype:size=8:antialias=false;0
+font-2 = siji:pixelsize=10;1
+font-3 = "Font Awesome 5 Brands:style=Regular:pixelsize=8;1"
+font-4 = "Font Awesome 5 Free:style=Regular:pixelsize=8;1"
+font-5 = "Font Awesome 5 Free:style=Solid:pixelsize=8;1"
+
+modules-left = i3
+modules-center =
+modules-right = filesystem backlight pulseaudio xkeyboard memory cpu wlan eth battery temperature date
+
+wm-restack = i3
+
+override-redirect = false
+
+scroll-up = i3wm-wsnext
+scroll-down = i3wm-wsprev
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/hostname]
+type = custom/script
+interval = 256
+format = "<label> "
+"format-prefix = "  "
+format-prefix = " ƸӜƷ "
+format-prefix-foreground = ${colors.secondary}
+format-padding = 0
+exec = echo "$(uname -n)"
+
 [module/spotify]
 type = custom/script
 exec = spotifycl status
 tail = true
+format = <label>
 format-foreground = ${colors.foreground-alt}
 format-underline = ${colors.primary}
 click-right = xte 'key XF86AudioPlay'
@@ -95,11 +153,12 @@ click-left = xte 'key XF86AudioPlay'
 click-middle = xte 'key XF86AudioNext'
 scroll-up = xte 'key XF86AudioNext'
 scroll-down = xte 'key XF86AudioPrev'
-
+label-maxlen = 30
+label-ellipsis = true
 
 [module/xwindow]
 type = internal/xwindow
-label = %title:0:30:...%
+label = %title:0:40:...%
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -159,6 +218,7 @@ wrapping-scroll = false
 ; Only show workspaces on the same output as the bar
 ;pin-workspaces = true
 
+label-mode = %mode%
 label-mode-padding = 2
 label-mode-foreground = #000
 label-mode-background = ${colors.primary}
@@ -187,6 +247,25 @@ label-urgent-padding = ${module/bspwm.label-urgent-padding}
 ; Separator in between workspaces
 ; label-separator = |
 
+
+[module/taskwarrior]
+interval = 30
+type = custom/script
+exec = $HOME/.config/polybar/task_polybar.sh
+format = <label>
+format-foreground = #FFF
+format-prefix = "§ "
+click-left = task "$((`cat /tmp/tw_polybar_id`))" done
+
+[module/line-l]
+type = custom/text
+content = "____[ "
+content-foreground = ${colors.primary}
+
+[module/line-r]
+type = custom/text
+content = " ]____"
+content-foreground = ${colors.primary}
 
 [module/mpd]
 type = internal/mpd

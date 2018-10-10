@@ -409,3 +409,10 @@
        :ensure t
        :hook (rust-mode . cargo-minor-mode))
    #+END_SRC
+** Docker
+   #+BEGIN_SRC emacs-lisp
+     (use-package docker
+       :ensure t)
+     (use-package docker-compose-mode
+       :ensure t)
+   #+END_SRC
