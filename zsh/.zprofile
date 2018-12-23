@@ -1,6 +1,7 @@
 cowfortune
 
-. /etc/profile.d/vte.sh
+#. /etc/profile.d/vte.sh
+
 
 export EDITOR=emacsclient
 
@@ -15,6 +16,7 @@ export MTP_NO_PROBE="1"
 #export ANDROID_HOME=/home/peter/Android/Sdk
 #export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH"
 
+export PATH="$HOME/go/bin:$PATH"
 export PATH="$HOME/.bin:$PATH"
 export PATH="$HOME/.cargo/bin:$HOME/.local/bin:$PATH"
 export RUST_SRC_PATH="$(rustc --print sysroot)/lib/rustlib/src/rust/src"
@@ -25,3 +27,4 @@ export npm_config_prefix=~/.node_modules
 
 alias open=xdg-open
 
+export TERM=xterm-256color

@@ -1,7 +1,7 @@
 #if __has_include(".extend.Xresources")
 #include ".extend.Xresources"
 #endif
-#include ".Xresources.dark"
+#include ".gruvbox-dark.xresources"
 
 ! ^ The above lines are no comments!
 ! Leave them as they are if a file ~/.extend.Xresources is being used on your system.
