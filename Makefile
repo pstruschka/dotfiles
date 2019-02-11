@@ -5,7 +5,7 @@ clean: uninstall_emacs uninstall_spacemacs \
        uninstall_vim uninstall_x uninstall_zsh \
        uninstall_basics
 
-.PHONY: emacs spacemacs git i3wm vim x zsh basics
+.PHONY: emacs spacemacs git i3wm vim x zsh fish basics
 
 emacs:
 	stow -t ~ emacs
@@ -21,6 +21,8 @@ x:
 	stow -t ~ x
 zsh:
 	stow -t ~ zsh
+fish:
+	stow -t ~ fish
 basics:
 	stow -t ~ basics
 
@@ -38,5 +40,7 @@ uninstall_x:
 	stow -Dt ~ x
 uninstall_zsh:
 	stow -Dt ~ zsh
+uninstall_fish:
+	stow -Dt ~ fish
 uninstall_basics:
 	stow -Dt ~ basics
