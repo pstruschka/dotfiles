@@ -7,13 +7,19 @@ clean: uninstall_emacs uninstall_spacemacs \
 
 .PHONY: emacs spacemacs git i3wm vim x zsh fish basics
 
+basics: yay
+	yay -Q - < meta/basic_deps || yay -S --needed - < meta/basic_deps
+	stow -t ~ basics
+
 emacs:
 	stow -t ~ emacs
 spacemacs:
 	stow -t ~ spacemacs
 git:
+	pacman -Q git || sudo pacman -S git
 	stow -t ~ git
-i3wm:
+i3wm: yay
+	pacman -Q - < meta/i3wm_deps || sudo yay -S --needed - < meta/i3wm_deps
 	stow -t ~ i3wm
 vim:
 	stow -t ~ vim
@@ -23,8 +29,9 @@ zsh:
 	stow -t ~ zsh
 fish:
 	stow -t ~ fish
-basics:
-	stow -t ~ basics
+
+yay: git
+	pacman -Q yay || (git clone aur:yay && pushd yay && makepkg -si && popd)
 
 uninstall_emacs:
 	stow -Dt ~ emacs

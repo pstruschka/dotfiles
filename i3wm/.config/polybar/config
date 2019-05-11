@@ -30,7 +30,8 @@ alert = #bd2c40
 [bar/topbar]
 monitor = ${env:MONITOR:eDP-1}
 width = 100%
-height = 30
+height = 40
+dpi = 156
 ;offset-x = 1%
 ;offset-y = 1%
 radius = 6.0
@@ -80,7 +81,8 @@ modules-right = filesystem backlight pulseaudio xkeyboard memory cpu wlan eth et
 [bar/topbar-second]
 monitor = ${env:MONITOR:eDP-1}
 width = 100%
-height = 30
+height = 40
+dpi = 156
 ;offset-x = 1%
 ;offset-y = 0
 radius = 6.0
@@ -138,11 +140,11 @@ tail = true
 format = <label>
 format-foreground = ${colors.foreground-alt}
 format-underline = ${colors.primary}
-click-right = xte 'key XF86AudioPlay'
-click-left = xte 'key XF86AudioPlay'
-click-middle = xte 'key XF86AudioNext'
-scroll-up = xte 'key XF86AudioNext'
-scroll-down = xte 'key XF86AudioPrev'
+click-right = playerctl play-pause
+click-left = playerctl play-pause
+click-middle = playerctl next
+scroll-up = playerctl next
+scroll-down = playerctl previous
 label-maxlen = 120
 label-ellipsis = true
 
@@ -333,7 +335,7 @@ label = %percentage_used%%
 
 [module/wlan]
 type = internal/network
-interface = wlp3s0
+interface = wlp13s0
 interval = 3.0
 accumulate-stats = true
 
@@ -353,7 +355,7 @@ ramp-signal-foreground = ${colors.foreground-alt}
 
 [module/eth]
 type = internal/network
-interface = enp0s31f6
+interface = eno1
 interval = 3.0
 accumulate-stats = true
 

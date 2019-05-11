@@ -50,6 +50,7 @@ server_address = '/tmp/spotifycl-socket'
 class Spotify:
 
     SPOTIFY_BUS = 'org.mpris.MediaPlayer2.spotify'
+    SPOTIFYD_BUS = 'org.mpris.MediaPlayer2.spotifyd'
     SPOTIFY_OBJECT_PATH = '/org/mpris/MediaPlayer2'
 
     PLAYER_INTERFACE = 'org.mpris.MediaPlayer2.Player'
@@ -81,7 +82,7 @@ class Spotify:
         self.freedesktop.connect_to_signal(
             "NameOwnerChanged",
             self.on_name_owner_changed,
-            arg0="org.mpris.MediaPlayer2.spotify"
+            arg0=self.SPOTIFYD_BUS
         )
 
         executor = ThreadPoolExecutor(max_workers=2)
@@ -197,10 +198,13 @@ class Spotify:
             self.last_output = line
 
     def setup_spotify(self):
-        self.spotify = self.session_bus.get_object(
-            Spotify.SPOTIFY_BUS,
-            Spotify.SPOTIFY_OBJECT_PATH
-        )
+        try:
+            self.spotify = self.session_bus.get_object(
+                Spotify.SPOTIFY_BUS,
+                Spotify.SPOTIFY_OBJECT_PATH
+            )
+        except dbus.DBusException:
+            self.spotify = self.session_bus.get_object(Spotify.SPOTIFYD_BUS, Spotify.SPOTIFY_OBJECT_PATH)
 
     def setup_properties_changed(self):
         try:
@@ -265,7 +269,7 @@ class Spotify:
         self.output_playback_status(data)
 
     def on_name_owner_changed(self, name, old_owner, new_owner):
-        if name == 'org.mpris.MediaPlayer2.spotify':
+        if name == self.SPOTIFY_BUS:
             if new_owner:
                 # Spotify was opened.
                 self.setup_properties_changed()

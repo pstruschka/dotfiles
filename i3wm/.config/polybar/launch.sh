@@ -9,12 +9,11 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 
 # Launch bar1 and bar2
 MONITOR=$(polybar -m|tail -n1|sed -e 's/:.*$//g') polybar topbar &
-
+sleep 1
 MONITORS=$(polybar -m|sed -e 's/:.*$//g')
 while read -r monitor; do
 	MONITOR=$monitor polybar topbar-second &
+	sleep 1
 done <<< $MONITORS
-
-PRIMARY_MONITOR=$(xrandr -q|awk '/ connected primary /'|cut -d ' ' -f1)
 
 echo "Bars launched..."

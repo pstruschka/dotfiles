@@ -18,8 +18,8 @@ export MTP_NO_PROBE="1"
 
 
 # Android SDK
-#export ANDROID_HOME=/home/peter/Android/Sdk
-#export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH"
+export ANDROID_HOME=/home/peter/Android/Sdk
+export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH"
 
 # bin
 export PATH="$HOME/.bin:$PATH"

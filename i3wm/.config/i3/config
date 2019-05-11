@@ -60,31 +60,33 @@ bindsym $mod+l focus up
 bindsym $mod+semicolon focus right
 
 # alternatively, you can use the cursor keys:
-#bindsym $mod+Left focus left
 bindsym $mod+Left workspace prev_on_output
-bindsym $mod+Control+Left workspace prev
+bindsym $mod+Shift+Left workspace prev
+bindsym $mod+Shift+j workspace prev
 bindsym $mod+Shift+Control+Left move workspace to output left
+
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
-#bindsym $mod+Right focus right
 bindsym $mod+Right workspace next_on_output
-bindsym $mod+Control+Right workspace next
+bindsym $mod+Shift+Right workspace next
+bindsym $mod+Shift+semicolon workspace next
 bindsym $mod+Shift+Control+Right move workspace to output right
+
 bindsym $mod+b workspace back_and_forth
 bindsym $mod+Shift+b move container to workspace back_and_forth
 bindsym $mod+n exec --no-startup-id rofiworkspace
 
 # move focused window
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+semicolon move right
+bindsym $mod+Control+j move left
+bindsym $mod+Control+k move down
+bindsym $mod+Control+l move up
+bindsym $mod+Control+semicolon move right
 
 # alternatively, you can use the cursor keys:
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
+bindsym $mod+Control+Left move left
+bindsym $mod+Control+Down move down
+bindsym $mod+Control+Up move up
+bindsym $mod+Control+Right move right
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -231,7 +233,7 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 
-bindsym $mod+Control+l exec "xautolock -locknow"
+bindsym $mod+Shift+l exec "xautolock -locknow"
 
 
 
@@ -248,3 +250,10 @@ gaps outer 0
 #        status_command i3status
 #        position top
 #}
+
+
+# window assignments
+for_window [class="Spotify"] move to workspace Spotify
+assign [class="Firefox"] → Browser
+assign [class="Zeal"] → Zeal
+assign [class="kitty"] → Term
