@@ -19,7 +19,7 @@ git:
 	pacman -Q git || sudo pacman -S git
 	stow -t ~ git
 i3wm: yay
-	pacman -Q - < meta/i3wm_deps || sudo yay -S --needed - < meta/i3wm_deps
+	pacman -Q - < meta/i3wm_deps || yay -S --needed - < meta/i3wm_deps
 	stow -t ~ i3wm
 vim:
 	stow -t ~ vim
