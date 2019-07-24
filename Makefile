@@ -5,7 +5,7 @@ clean: uninstall_emacs uninstall_spacemacs \
        uninstall_vim uninstall_x uninstall_zsh \
        uninstall_basics
 
-.PHONY: emacs spacemacs git i3wm vim x zsh fish basics
+.PHONY: emacs spacemacs git i3wm vim nvim tmux x zsh fish basics
 
 basics: yay
 	yay -Q - < meta/basic_deps || yay -S --needed - < meta/basic_deps
@@ -33,6 +33,15 @@ fish:
 yay: git
 	pacman -Q yay || (git clone aur:yay && pushd yay && makepkg -si && popd)
 
+tmux: yay
+	pacman -Q - < meta/powerline_deps || yay -S --needed - < meta/powerline_deps
+	stow -t ~ tmux
+
+nvim:
+	curl -fLo nvim/.config/nvim/autoload/plug.vim --create-dirs \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+	stow -t ~ nvim
+
 uninstall_emacs:
 	stow -Dt ~ emacs
 uninstall_spacemacs:
@@ -51,3 +60,7 @@ uninstall_fish:
 	stow -Dt ~ fish
 uninstall_basics:
 	stow -Dt ~ basics
+uninstall_tmux:
+	stom -Dt ~ tmux
+uninstall_nvim:
+	stom -Dt ~ nvim

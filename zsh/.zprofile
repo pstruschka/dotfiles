@@ -27,6 +27,7 @@ export PATH="$HOME/.bin:$PATH"
 # Go
 if type "go" > /dev/null; then
   export PATH="$HOME/go/bin:$PATH"
+  export GOPATH=$(go env GOPATH)
 fi
 
 # Rust
