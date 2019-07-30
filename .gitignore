@@ -1,1 +1,5 @@
 **/systemd/user/*.target.wants
+
+
+#specific repos
+yay/
