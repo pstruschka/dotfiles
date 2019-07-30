@@ -1,0 +1,6 @@
+#+TITLE: config
+
+* Relative line numbers
+#+BEGIN_SRC elisp
+(setq display-line-numbers-type 'relative)
+#+END_SRC
