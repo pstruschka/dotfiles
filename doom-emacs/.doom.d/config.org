@@ -1,6 +1,125 @@
 #+TITLE: config
 
+* Font settings
+#+BEGIN_SRC emacs-lisp
+(setq
+ doom-font (font-spec :family "Source Code Pro" :size 20)
+ doom-big-font (font-spec :family "Source Code Pro" :size 36)
+ doom-variable-pitch-font (font-spec :family "Source Sans Pro" :size 18))
+#+END_SRC
+
+* Projectile
+Projectile Path
+#+BEGIN_SRC emacs-lisp
+(setq projectile-project-search-path '("~/repos/" "~/Documents/Work/" "~/code"))
+#+END_SRC
+
 * Relative line numbers
-#+BEGIN_SRC elisp
+#+BEGIN_SRC emacs-lisp
 (setq display-line-numbers-type 'relative)
+#+END_SRC
+
+* Org
+#+BEGIN_SRC emacs-lisp
+(add-hook 'org-mode-hook #'auto-fill-mode)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (map! :map org-mode-map
+        :n "M-j" #'org-metadown
+        :n "M-k" #'org-metaup
+        ))
+#+END_SRC
+
+Org capture
+#+BEGIN_SRC emacs-lisp
+(after! org
+  (setq org-capture-templates '(("t" "Personal todo" entry
+    (file+headline +org-capture-todo-file "Inbox")
+    "* TODO %?\n%i\n%a" :prepend t :kill-buffer t)
+   ("n" "Personal notes" entry
+    (file+headline +org-capture-notes-file "Inbox")
+    "* %u %?\n%i\n%a" :prepend t :kill-buffer t)
+   ("p" "Templates for projects")
+   ("pt" "Project todo" entry
+    (file+headline +org-capture-project-todo-file "Inbox")
+    "* TODO %?\n%i\n%a" :prepend t :kill-buffer t)
+   ("pn" "Project notes" entry
+    (file+headline +org-capture-project-notes-file "Inbox")
+    "* TODO %?\n%i\n%a" :prepend t :kill-buffer t)
+   ("pc" "Project changelog" entry
+    (file+headline +org-capture-project-notes-file "Unreleased")
+    "* TODO %?\n%i\n%a" :prepend t :kill-buffer t))))
+#+END_SRC
+
+Org Super Agenda
+#+BEGIN_SRC emacs-lisp
+(def-package! org-super-agenda
+  :after org-agenda
+  :init
+  (setq org-super-agenda-groups '((:name "Today"
+                                         :time-grid t
+                                         :scheduled today)
+                                  (:name "Due today"
+                                         :deadline today)
+                                  (:name "Important"
+                                         :priority "A")
+                                  (:name "Overdue"
+                                         :deadline past)
+                                  (:name "Due soon"
+                                         :deadline future)
+                                  (:name "Big Outcomes"
+                                         :tag "bo")))
+  :config
+  (org-super-agenda-mode)
+)
+#+END_SRC
+* IMenu
+#+BEGIN_SRC emacs-lisp
+(setq imenu-anywhere-delimiter ": ")
+
+(add-hook 'imenu-after-jump-hook #'better-jumper-set-jump)
+
+(after! imenu-list
+  (setq imenu-list-idle-update-delay 0.5)
+
+  (set-popup-rule! "^\\*Ilist"
+    :side 'right :size 35 :quit nil :select nil :ttl 0))
+#+END_SRC
+* Leader keys
+#+BEGIN_SRC emacs-lisp
+(map! :leader
+      (:prefix-map ("/" . "search"))
+      (:when (featurep! :ui workspaces)
+        (:prefix-map ("TAB" . "workspace")))
+      (:prefix-map ("b" . "buffer"))
+      (:prefix-map ("c" . "code"))
+      (:prefix-map ("f" . "file"))
+      (:prefix-map ("g" . "git"))
+      (:prefix-map ("i" . "insert"))
+      (:prefix-map ("n" . "notes"))
+      (:prefix-map ("o" . "open")
+      (:prefix-map ("p" . "project"))
+      (:prefix-map ("q" . "session"))
+      (:when (featurep! :editor upload)
+        (:prefix-map ("r" . "remote")))
+      (:when (featurep! :editor snipets)
+        (:prefix-map ("s" . "snippets")))
+      (:prefix-map ("t" . "toggle")
+        :desc "Toggle imenu-list" "m" #'imenu-list-smart-toggle)))
+#+END_SRC
+* Dired
+Do what I mean target allows dired to use window context for copying and moving
+#+BEGIN_SRC emacs-lisp
+(setq dired-dwim-target t)
+#+END_SRC
+* Laguages
+Typescript
+#+BEGIN_SRC emacs-lisp
+(def-package! tide
+  :after (typescript-mode company flycheck)
+  :hook ((typescript-mode . tide-setup)
+         (typescript-mode . tide-hl-identifier-mode)
+         (before-save . tide-format-before-save)))
 #+END_SRC
