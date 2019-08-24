@@ -71,8 +71,6 @@ class Spotify:
         # Whether to ignore the update
         self.ignore = False
 
-        #self.setup_spotipy()
-
     def monitor(self):
         self.setup_properties_changed()
         self.freedesktop = self.session_bus.get_object(
@@ -103,33 +101,6 @@ class Spotify:
         sock.bind(server_address)
         sock.listen(5)
 
-        while True:
-            connection, client_address = sock.accept()
-            try:
-                command = connection.recv(16)
-
-                if command == Spotify.SAVE_REMOVE:
-                    self.save_remove()
-            except Exception as e:
-                print(e)
-            finally:
-                connection.close()
-
-    def stop_server(self):
-        self.server_loop.close()
-
-    def send_to_server(self, command: bytes):
-        sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
-        try:
-            sock.connect(server_address)
-        except socket.error:
-            raise
-
-        try:
-            sock.sendall(command)
-        finally:
-            sock.close()
-
     @property
     def metadata_status(self):
         spotify_properties = dbus.Interface(
@@ -145,50 +116,6 @@ class Spotify:
             'PlaybackStatus'
         )
         return metadata, playback_status
-
-    def setup_spotipy(self):
-        auth = util.prompt_for_user_token(
-            username=os.environ.get('SPOTIFY_USERNAME'),
-            scope='user-library-read,user-library-modify'
-        )
-        self.spotipy = spotipy.Spotify(auth=auth)
-
-    def save_remove(self, retry=False):
-        try:
-            metadata, playback_status = self.metadata_status
-            trackid = metadata['mpris:trackid']
-
-            self.ignore = True
-            remove = self.saved_track
-            self.saved_track = not self.saved_track
-            try:
-                if remove:
-                    self.spotipy.current_user_saved_tracks_delete(tracks=[trackid])
-                    self.output(f'{active_color}Removed from library!{default_color}')
-                else:
-                    self.spotipy.current_user_saved_tracks_add(tracks=[trackid])
-                    self.output(f'{active_color}Saved to library!{default_color}')
-            except SpotifyException:
-                if not retry:
-                    # Refresh access token
-                    self.setup_spotipy()
-                    self.save_remove(retry=True)
-                    return
-                else:
-                    raise
-            time.sleep(2)
-            self.ignore = False
-
-            metadata, playback_status = self.metadata_status
-            self.output_playback_status(
-                data={
-                    'Metadata': metadata,
-                    'PlaybackStatus': playback_status,
-                }
-            )
-
-        except dbus.DBusException:
-            self.output('Could not connect to spotify.')
 
     def output(self, line):
         if not line:
@@ -248,22 +175,6 @@ class Spotify:
 
         if not same_song:
             self.last_title = title
-            trackid = metadata['mpris:trackid']
-
-            # try:
-            #     self.update_saved_track(trackid=trackid)
-            # except SpotifyException:
-            #     # Refresh access token
-            #     self.setup_spotipy()
-            #     self.update_saved_track(trackid=trackid)
-            # if self.saved_track:
-            #     divider = '+'
-            #     self.output(f'{color}{artist} {divider} {title}{default_color}')
-
-    def update_saved_track(self, trackid: str):
-        self.saved_track = self.spotipy.current_user_saved_tracks_contains(
-            tracks=[trackid]
-        )[0]
 
     def on_properties_changed(self, interface, data, *args, **kwargs):
         self.output_playback_status(data)
@@ -290,13 +201,6 @@ def status():
     """Follow the status of the currently playing song on Spotify."""
     spotify = Spotify()
     spotify.monitor()
-
-
-# @cli.command()
-# def save_remove():
-#     """Save/remove the currently playing song to/from your library."""
-#     spotify = Spotify()
-#     spotify.send_to_server(Spotify.SAVE_REMOVE)
 
 
 if __name__ == '__main__':
