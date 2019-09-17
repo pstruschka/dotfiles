@@ -1,8 +1,8 @@
 all_files := basics emacs spacemacs doom-emacs git i3wm vim nvim tmux x zsh fish
-simple_files := emacs spacemacs doom-emacs vim x zsh fish
+simple_files := emacs spacemacs doom-emacs vim x fish
 
 
-.PHONY: $(all_files)
+.PHONY: $(all_files) zplug
 
 
 $(simple_files):
@@ -29,7 +29,11 @@ nvim:
 	curl -fLo nvim/.config/nvim/autoload/plug.vim --create-dirs \
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	stow -t ~ $@
+zsh: zplug
+	stow -t ~ $@
 
+zplug:
+	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 
 
 
