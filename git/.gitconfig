@@ -7,7 +7,7 @@
   excludesfile = ~/.gitignore_global
 [credential]
   helper = cache --timeout=600
-[url "https://github/"]
+[url "https://github.com/"]
   insteadOf = "gh:"
 [url "git@github.com:"]
   pushInsteadOf = "gh:"
@@ -15,3 +15,8 @@
   insteadOf = "aur:"
 [url "ssh+git://aur@aur.archlinux.org/"]
   pushInsteadOf = "aur:"
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process

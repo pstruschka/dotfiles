@@ -1,4 +1,4 @@
-all_files := basics emacs spacemacs doom-emacs git i3wm vim nvim tmux x zsh fish
+all_files := basics emacs spacemacs doom-emacs git i3wm bspwm vim nvim tmux x zsh fish
 simple_files := emacs spacemacs doom-emacs vim x zsh fish
 
 
@@ -12,12 +12,19 @@ $(simple_files):
 basics: yay
 	yay -Q - < meta/basic_deps || yay -S --needed - < meta/basic_deps
 	stow -t ~ $@
+
 git:
 	pacman -Q git || sudo pacman -S git
 	stow -t ~ $@
+
 i3wm: yay
 	pacman -Q - < meta/i3wm_deps || yay -S --needed - < meta/i3wm_deps
 	stow -t ~ $@
+
+bspwm: yay
+	pacman -Q - < meta/bspwm_deps || yay -S --needed - < meta/bspwm_deps
+	stow -t ~ $@
+
 yay: git
 	pacman -Q yay || (git clone aur:yay && pushd yay && makepkg -si && popd)
 

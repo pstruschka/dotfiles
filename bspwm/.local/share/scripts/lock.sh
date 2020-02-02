@@ -6,7 +6,7 @@ revert() {
 trap revert HUP INT TERM
 xset +dpms dpms 0 0 5
 
-ffmpeg -loglevel quiet -y -f x11grab -video_size `xdpyinfo | grep 'dimensions' | awk '{print $2}'` -i $DISPLAY -i ~/.rick_lock.png -filter_complex "boxblur=5:1,overlay=(main_w-overlay_w-400):(main_h-overlay_h-5)" -vframes 1 /tmp/screen.png
+ffmpeg -loglevel quiet -y -f x11grab -video_size `xdpyinfo | grep 'dimensions' | awk '{print $2}'` -i $DISPLAY -i ~/.local/share/lock/rick_lock.png -filter_complex "boxblur=5:1,overlay=(main_w-overlay_w-400):(main_h-overlay_h-5)" -vframes 1 /tmp/screen.png
 
 #scrot -d 1 /tmp/locking_screen.png
 #convert -blur 0x8 /tmp/locking_screen.png /tmp/screen_blur.png

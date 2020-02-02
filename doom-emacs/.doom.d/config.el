@@ -1,9 +1,9 @@
 (setq
- doom-font (font-spec :family "Source Code Pro" :size 20)
- doom-big-font (font-spec :family "Source Code Pro" :size 36)
- doom-variable-pitch-font (font-spec :family "Source Sans Pro" :size 18))
+ doom-font (font-spec :family "Fira Code" :size 14)
+ doom-big-font (font-spec :family "Fira Code" :size 24)
+ doom-variable-pitch-font (font-spec :family "Fira Code" :size 16))
 
-(setq projectile-project-search-path '("~/repos/" "~/Documents/Work/" "~/code"))
+(setq projectile-project-search-path '("~/Documents/Work" "~/code"))
 
 (setq display-line-numbers-type 'relative)
 
@@ -33,7 +33,7 @@
     (file+headline +org-capture-project-notes-file "Unreleased")
     "* TODO %?\n%i\n%a" :prepend t :kill-buffer t))))
 
-(def-package! org-super-agenda
+(use-package! org-super-agenda
   :after org-agenda
   :init
   (setq org-super-agenda-groups '((:name "Today"
@@ -63,29 +63,29 @@
   (set-popup-rule! "^\\*Ilist"
     :side 'right :size 35 :quit nil :select nil :ttl 0))
 
-(map! :leader
-      (:prefix-map ("/" . "search"))
-      (:when (featurep! :ui workspaces)
-        (:prefix-map ("TAB" . "workspace")))
-      (:prefix-map ("b" . "buffer"))
-      (:prefix-map ("c" . "code"))
-      (:prefix-map ("f" . "file"))
-      (:prefix-map ("g" . "git"))
-      (:prefix-map ("i" . "insert"))
-      (:prefix-map ("n" . "notes"))
-      (:prefix-map ("o" . "open")
-      (:prefix-map ("p" . "project"))
-      (:prefix-map ("q" . "session"))
-      (:when (featurep! :editor upload)
-        (:prefix-map ("r" . "remote")))
-      (:when (featurep! :editor snipets)
-        (:prefix-map ("s" . "snippets")))
-      (:prefix-map ("t" . "toggle")
-        :desc "Toggle imenu-list" "m" #'imenu-list-smart-toggle)))
+;;(map! :leader
+;;      (:prefix-map ("/" . "search"))
+;;      (:when (featurep! :ui workspaces)
+;;      (:prefix-map ("TAB" . "workspace")))
+;;      (:prefix-map ("b" . "buffer"))
+;;      (:prefix-map ("c" . "code"))
+;;      (:prefix-map ("f" . "file"))
+;;      (:prefix-map ("g" . "git"))
+;;      (:prefix-map ("i" . "insert"))
+;;      (:prefix-map ("n" . "notes"))
+;;      (:prefix-map ("o" . "open")
+;;      (:prefix-map ("p" . "project"))
+;;      (:prefix-map ("q" . "session"))
+;;      (:when (featurep! :editor upload)
+;;        (:prefix-map ("r" . "remote")))
+;;      (:when (featurep! :editor snipets)
+;;        (:prefix-map ("s" . "snippets")))
+;;      (:prefix-map ("t" . "toggle")
+;;        :desc "Toggle imenu-list" "m" #'imenu-list-smart-toggle)))
 
 (setq dired-dwim-target t)
 
-(def-package! tide
+(use-package! tide
   :after (typescript-mode company flycheck)
   :hook ((typescript-mode . tide-setup)
          (typescript-mode . tide-hl-identifier-mode)

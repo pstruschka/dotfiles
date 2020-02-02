@@ -10,12 +10,12 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id xautolock -locker "~/.lock.sh" -time 60 -detectsleep -notify 10
+exec_always --no-startup-id xautolock -locker "$HOME/.local/bin/lock.sh" -time 60 -detectsleep -notify 10
 exec --no-startup-id nm-applet
 exec --no-startup-id compton
 
 set $mod Mod4
-exec_always --no-startup-id feh --bg-scale ~/.wallpaper.jpg
+exec_always --no-startup-id feh --bg-scale $HOME/.local/share/images/wallpaper.jpg
 new_window 1pixel
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -37,7 +37,7 @@ font pango:DejaVu Sans Mono 8
 floating_modifier $mod
 
 # start a terminal
-bindsym $mod+Return exec kitty #i3-sensible-terminal
+bindsym $mod+Return exec alacritty #kitty #i3-sensible-terminal
 
 # kill focused window
 bindsym $mod+Shift+q kill
@@ -74,7 +74,8 @@ bindsym $mod+Shift+Control+Right move workspace to output right
 
 bindsym $mod+b workspace back_and_forth
 bindsym $mod+Shift+b move container to workspace back_and_forth
-bindsym $mod+n exec --no-startup-id rofiworkspace
+bindsym $mod+n exec --no-startup-id rofi_goto_workspace
+bindsym $mod+m exec --no-startup-id rofi_moveto_workspace
 
 # move focused window
 bindsym $mod+Control+j move left
@@ -257,3 +258,4 @@ for_window [class="Spotify"] move to workspace Spotify
 assign [class="Firefox"] → Browser
 assign [class="Zeal"] → Zeal
 assign [class="kitty"] → Term
+assign [class="Alacritty"] → Term

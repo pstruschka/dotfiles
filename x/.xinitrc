@@ -9,3 +9,4 @@ systemctl --user import-environment DISPLAY
 
 #exec startxfce4
 exec i3
+#exec bspwm

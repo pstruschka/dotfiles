@@ -1,12 +1,13 @@
-if type "cowfortune" > /dev/null; then
-  cowfortune
-fi
+source /etc/zsh/zprofile
+#if type "cowfortune" > /dev/null; then
+#  cowfortune
+#fi
 
 #. /etc/profile.d/vte.sh
 
-export TERM=xterm-256color
+#export TERM=xterm-256color
 
-export EDITOR=emacsclient
+export EDITOR="emacsclient -c"
 
 export DEFAULT_USER=peter
 
@@ -16,9 +17,11 @@ export QT_SCALE_FACTOR=0
 
 export MTP_NO_PROBE="1"
 
+export XDG_CONFIG_HOME="$HOME/.config"
+
 
 # Android SDK
-export ANDROID_HOME=/home/peter/Android/Sdk
+export ANDROID_HOME="$HOME/.local/share/android-sdk"
 export PATH="$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$ANDROID_HOME/tools/bin:$PATH"
 
 # bin
