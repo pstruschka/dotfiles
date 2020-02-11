@@ -84,11 +84,11 @@ alias ec="emacsclient -c"
 
 [[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
 
-if ! zplug check --verbose; then
+if ! zplug check; then
         printf "Install? [y/N]: "
         if read -q; then
                 echo; zplug install
         fi
 fi
 
-zplug load --verbose
+zplug load

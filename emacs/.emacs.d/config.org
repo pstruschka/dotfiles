@@ -1,0 +1,300 @@
+* Emacs
+  :PROPERTIES:
+  :header-args: :tangle ~/.emacs.d/config.el
+  :END:
+
+** Essentials
+*** Debugging essentials
+#+BEGIN_SRC elisp
+(setq debug-on-error t)
+(setq debug-on-quit t)
+#+END_SRC
+*** Package setup
+#+BEGIN_SRC elisp
+(defconst emacs-start-time (current-time))
+
+(setq straight-repository-branch              "develop"
+      straight-vc-git-default-clone-depth     1
+      straight-use-package-by-default         t)
+
+(defvar bootstrap-version)
+(let ((bootstrap-file
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	(url-retrieve-synchronously
+	 "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	 'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(setq straight-use-package-by-default 't)
+(straight-use-package 'use-package)
+(let ((elapsed (float-time (time-subtract (current-time)
+					  emacs-start-time))))
+  (message "Loaded packages in %.3fs" elapsed))
+(setq gc-cons-threshold 100000)
+#+END_SRC
+*** Information
+#+BEGIN_SRC elisp
+(setq user-full-name "Peter Son Struschka"
+      user-mail-address "me@peter-struschka.com")
+(setenv "SHELL" "/usr/bin/zsh")
+#+END_SRC
+*** Garbage collection
+#+BEGIN_SRC elisp
+(use-package gcmh
+  :straight t
+  :demand t
+  :init
+  (setq gcmh-verbose             t
+	gcmh-lows-cons-threshold #x800000
+	gcmh-high-cons-threshold #x800000
+	gcmh-idle-delay          300)
+  :config
+  (gcmh-mode))
+#+END_SRC
+*** Benchmarks
+#+BEGIN_SRC elisp
+(use-package benchmark-init
+  :demand t
+  :hook ((after-init . benchmark-init/deactivate)))
+#+END_SRC
+*** Littering
+#+BEGIN_SRC elisp
+(use-package no-littering)
+(require 'no-littering)
+#+END_SRC
+
+** Base
+*** Helm
+#+BEGIN_SRC elisp
+(use-package helm
+  :init
+  (setq helm-split-window-default-side 'other)
+  (helm-mode 1)
+  :config
+  (define-key helm-find-files-map
+    (kbd "<backtab>") #'helm-select-action)
+  (define-key helm-find-files-map
+    (kbd "C-i")  #'helm-execute-persistent-action)
+  :bind
+  (([remap apropos] . helm-apropos)
+   ([remap find-library] . helm-locate-library)
+   ([remap bookmark-jump] . helm-bookmarks)
+   ([remap execute-extended-command] . helm-M-x)
+   ([remap find-file] . helm-find-files)
+   ([remap locate] . helm-locate)
+   ([remap imenu] . helm-imenu)
+   ([remap noop-show-kill-ring] . helm-show-kill-ring)
+   ([remap switch-to-buffer] . helm-buffers-list)
+   ([remap minibuffer] . helm-mini)
+   ([remap recentf-open-files] . helm-recentf)
+   ([remap occur] . helm-occur)
+   ([remap yank-pop] . helm-show-kill-ring)
+   ("C-x b" . helm-mini)
+   ("C-h d" . helm-info-at-point)
+   ("C-c r" . helm-resume)))
+
+(use-package swiper-helm
+  :bind (("C-s" . swiper-helm)))
+#+END_SRC
+*** Which
+#+BEGIN_SRC elisp
+(use-package which-key
+  :init
+  (setq which-key-separator " ")
+  (setq which-key-prefix-prefix "+")
+  :config
+  (which-key-mode))
+#+END_SRC
+*** Evil
+#+BEGIN_SRC elisp
+(use-package evil
+  :config
+  (evil-mode 1))
+(use-package evil-escape
+  :init
+  (setq-default evil-escape-key-sequence "jk")
+  :config
+  (evil-escape-mode t))
+#+END_SRC
+*** General
+#+BEGIN_SRC elisp
+(use-package general
+  :config
+  (general-define-key
+   :states '(normal visual insert emacs)
+   :prefix "SPC"
+   :non-normal-prefix "M-SPC"
+   ;; "/"   '(counsel-rg :which-key "ripgrep") ; You'll need counsel package for this
+   "TAB" '(switch-to-prev-buffer :which-key "previous buffer")
+   "SPC" '(helm-M-x :which-key "M-x")
+   ;; Files
+   "f"   '(:ignore t :which-key "Files")
+   "ff"  '(helm-find-files :which-key "find files")
+   ;; Buffers
+   "b"   '(:ignore t :which-key "Buffers")
+   "bb"  '(helm-buffers-list :which-key "buffers list")
+   "bd"  '(kill-this-buffer :which-key "buffer kill")
+   ;; Window
+   "w"   '(:ignore t :which-key "Windows")
+   "wl"  '(windmove-right :which-key "move right")
+   "wh"  '(windmove-left :which-key "move left")
+   "wk"  '(windmove-up :which-key "move up")
+   "wj"  '(windmove-down :which-key "move bottom")
+   "w/"  '(split-window-right :which-key "split right")
+   "w-"  '(split-window-below :which-key "split bottom")
+   "wx"  '(delete-window :which-key "delete window")
+   ;; Others
+   "a"   '(:ignore t :which-key "Apps")
+   "at"  '(ansi-term :which-key "open terminal")
+   ))
+#+END_SRC
+*** Completion
+#+BEGIN_SRC elisp
+(use-package company
+  :defer t
+  :diminish (company-mode . " ⓐ")
+  :init
+  (global-company-mode)
+  :config
+  (setq company-tooltip-align-annotations t
+	company-idle-delay 0.2
+	;; min prefix of 2 chars
+	company-minimum-prefix-length 2
+	company-require-match nil))
+
+(use-package company-quickhelp          ; Show help in tooltip
+  :requires (company)
+  :defer t
+  :init (with-eval-after-load 'company
+	  (company-quickhelp-mode)))
+#+END_SRC
+
+*** Org Mode
+#+BEGIN_SRC elisp
+(use-package org-bullets
+  :hook (org-mode . (lambda () (org-bullets-mode t))))
+(setq org-hide-leading-stars t)
+(add-hook 'org-mode-hook 'org-indent-mode)
+(setq org-src-fontify-natively t)
+(setq org-src-preserve-indentation t
+      org-edit-src-content-indentation t)
+#+END_SRC
+
+*** Project
+#+BEGIN_SRC elisp
+(use-package projectile
+  :config
+  (projectile-mode t))
+
+#+END_SRC
+*** Git
+#+BEGIN_SRC elisp
+(use-package magit)
+#+END_SRC
+*** Treemacs
+#+BEGIN_SRC elisp
+(use-package treemacs
+  :ensure t
+  :defer t
+  :init
+  (with-eval-after-load 'winum
+    (define-key winum-keymap (kbd "M-0") #'treemacs-select-window))
+  :bind
+  (:map global-map
+	("M-0"       . treemacs-select-window)
+	("C-x t 1"   . treemacs-delete-other-windows)
+	("C-x t t"   . treemacs)
+	("C-x t B"   . treemacs-bookmark)
+	("C-x t C-t" . treemacs-find-file)
+	("C-x t M-t" . treemacs-find-tag)))
+
+(use-package treemacs-evil)
+(use-package treemacs-projectile)
+(use-package treemacs-icons-dired)
+(use-package treemacs-magit)
+#+END_SRC
+** Appearance
+*** theme
+#+BEGIN_SRC elisp
+(use-package doom-themes
+  :config
+  (load-theme 'doom-one t))
+#+END_SRC
+
+*** Dashboard
+#+BEGIN_SRC elisp
+(use-package dashboard
+  :ensure t
+  :config
+  ;; Set the title
+  (setq dashboard-banner-logo-title "Welcome to Emacs Dashboard")
+  ;; Set the banner
+  (setq dashboard-startup-banner 'official)
+  ;; Value can be
+  ;; 'official which displays the official emacs logo
+  ;; 'logo which displays an alternative emacs logo
+  ;; 1, 2 or 3 which displays one of the text banners
+  ;; "path/to/your/image.png" which displays whatever image you would prefer
+  
+  ;; Content is not centered by default. To center, set
+  (setq dashboard-center-content t)
+  
+  ;; To disable shortcut "jump" indicators for each section, set
+  (setq dashboard-show-shortcuts nil)
+  (dashboard-setup-startup-hook))
+#+END_SRC
+
+*** Modeline
+#+BEGIN_SRC elisp
+(use-package doom-modeline
+  :hook (after-init . doom-modeline-mode)
+  :config (setq doom-modeline-height 25
+		doom-modeline-bar-width 3
+		doom-modeline-project-detection 'project
+		doom-modeline-buffer-file-name-style 'truncate-upto-project))
+
+#+END_SRC
+** Misc
+*** QOL
+#+BEGIN_SRC elisp
+(show-paren-mode 1)
+(setq sentence-end-double-space nil)
+
+(setq scroll-step 1
+      mouse-wheel-scroll-amount '(1 ((shift) . 1))
+      mouse-wheel-progressive-speed nil
+      mouse-wheel-follow-mouse 't
+      redisplay-dont-pause t)
+
+(when (version<= "26.0.50" emacs-version )
+    (global-display-line-numbers-mode))
+
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+#+END_SRC
+*** Custom definitions
+#+BEGIN_SRC elisp
+(defun find-config ()
+  "Edit config.org"
+  (interactive)
+  (find-file "~/.emacs.d/config.org"))
+
+(global-set-key (kbd "C-c I") 'find-config)
+#+END_SRC
+*** Finish
+#+BEGIN_SRC elisp
+(setq debug-on-error nil)
+(setq debug-on-quit nil)
+
+(let ((elapsed (float-time (time-subtract (current-time)
+					  emacs-start-time))))
+  (message "Loading settings...done (%.3fs)" elapsed))
+(put 'narrow-to-region 'disabled nil)
+#+END_SRC

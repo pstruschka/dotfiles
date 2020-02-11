@@ -5,7 +5,7 @@ Description=Battery Monitor
 Type=simple
 Environment=DISPLAY=:0
 Environment=XAUTHORITY=%h/.Xauthority
-ExecStart=/bin/bash %h/.bin/battery-monitor
+ExecStart=/bin/bash %h/.local/bin/battery-monitor
 Restart=always
 RestartSec=10
 
