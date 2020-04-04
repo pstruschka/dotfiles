@@ -11,7 +11,7 @@
 * Projectile
 Projectile Path
 #+BEGIN_SRC emacs-lisp
-(setq projectile-project-search-path '("~/Documents/Work" "~/code"))
+(setq projectile-project-search-path '("~/code"))
 #+END_SRC
 
 * Relative line numbers

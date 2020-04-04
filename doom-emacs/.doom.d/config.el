@@ -3,7 +3,7 @@
  doom-big-font (font-spec :family "Fira Code" :size 24)
  doom-variable-pitch-font (font-spec :family "Fira Code" :size 16))
 
-(setq projectile-project-search-path '("~/Documents/Work" "~/code"))
+(setq projectile-project-search-path '("~/code"))
 
 (setq display-line-numbers-type 'relative)
 
