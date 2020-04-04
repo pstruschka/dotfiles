@@ -7,7 +7,8 @@ source /etc/zsh/zprofile
 
 #export TERM=xterm-256color
 
-export EDITOR="emacsclient -c"
+#export EDITOR="emacsclient -c"
+export EDITOR="nvim"
 
 export DEFAULT_USER=peter
 

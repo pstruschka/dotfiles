@@ -41,6 +41,11 @@ zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
 
 fpath+=~/.zfunc
 
+autoload -Uz compinit
+compinit
+
+source $ZSH/oh-my-zsh.sh
+
 if [ "$TERM" = "linux" ]; then
     _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
     for i in $(sed -n "$_SEDCMD" $HOME/.Xresources | awk '$1 < 16 {printf "\\e]P%X%s", $1, $2}'); do
@@ -50,8 +55,6 @@ if [ "$TERM" = "linux" ]; then
 fi
 
 if type "kitty" > /dev/null; then
-  autoload -Uz compinit
-  compinit
   # Completion for kitty
   kitty + complete setup zsh | source /dev/stdin
 
