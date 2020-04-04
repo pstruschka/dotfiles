@@ -121,7 +121,7 @@ module-margin-left = 2
 module-margin-right = 2
 modules-left = i3
 modules-center = spotify
-modules-right = taskwarrior date
+modules-right = date
 
 [module/hostname]
 type = custom/script
@@ -238,16 +238,6 @@ label-urgent-padding = ${module/bspwm.label-urgent-padding}
 
 ; Separator in between workspaces
 ; label-separator = |
-
-
-[module/taskwarrior]
-interval = 30
-type = custom/script
-exec = $HOME/.config/polybar/task_polybar.sh
-format = <label>
-format-foreground = #FFF
-format-prefix = "§ "
-click-left = task "$((`cat /tmp/tw_polybar_id`))" done
 
 [module/line-l]
 type = custom/text
