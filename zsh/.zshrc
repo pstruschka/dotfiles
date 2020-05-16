@@ -17,6 +17,7 @@ zplug "plugins/thefuck", from:oh-my-zsh
 zplug "plugins/tmux", from:oh-my-zsh
 zplug "plugins/virtualenvwrapper", from:oh-my-zsh
 zplug "plugins/zsh-navigation-tools", from:oh-my-zsh
+zplug "plugins/colored-man-pages", from:oh-my-zsh
 
 zplug "zsh-users/zsh-syntax-highlighting"
 zplug "zsh-users/zsh-autosuggestions"
@@ -37,14 +38,29 @@ POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time root_indicator
 
 # zplug theme https://gist.github.com/pstruschka/c05686e6cf10e12471a3104e42e6366b.git agnoster_custom
 
-zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
+#[ "$TERM" = "linux" ] || zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
+case "$TERM" in
+    "linux") ;;
+    "dumb") export PS1="> ";;
+    *) zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
+esac
+
+if ! zplug check; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+zplug load
 
 fpath+=~/.zfunc
 
 autoload -Uz compinit
 compinit
 
-source $ZSH/oh-my-zsh.sh
+[ -z $ZSH ] || ( [ -e $ZSH/oh-my-zsh.sh ] && \
+    source $ZSH/oh-my-zsh.sh )
 
 if [ "$TERM" = "linux" ]; then
     _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
@@ -55,43 +71,37 @@ if [ "$TERM" = "linux" ]; then
 fi
 
 if type "kitty" > /dev/null; then
-  # Completion for kitty
-  kitty + complete setup zsh | source /dev/stdin
+    # Completion for kitty
+    kitty + complete setup zsh | source /dev/stdin
 
-  alias kdiff="kitty +kitten diff"
-  alias kicat="kitty +kitten icat"
-  alias kunicode="kitty +kitten unicode_input"
-  alias kpanel="kitty +kitten panel"
-  alias khints="kitty +kitten hints"
-  alias kclip="kitty +kitten clipboard"
+    alias kdiff="kitty +kitten diff"
+    alias kicat="kitty +kitten icat"
+    alias kunicode="kitty +kitten unicode_input"
+    alias kpanel="kitty +kitten panel"
+    alias khints="kitty +kitten hints"
+    alias kclip="kitty +kitten clipboard"
 fi
 
 
 if type "exa" > /dev/null; then
-  alias ls=exa
+    alias ls=exa
 fi
 
 if type "thefuck" > /dev/null; then
-  eval $(thefuck --alias)
+    eval $(thefuck --alias)
 fi
 
 if type "fasd" > /dev/null; then
-  eval "$(fasd --init auto)"
+    eval "$(fasd --init auto)"
 fi
 
 # python virtualenvwrapper
 export WORKON_HOME=~/.virtualenvs
-[[ -e /usr/bin/virtualenvwrapper_lazy.sh ]] && source /usr/bin/virtualenvwrapper_lazy.sh
+[[ -e /usr/bin/virtualenvwrapper_lazy.sh ]] && \
+    source /usr/bin/virtualenvwrapper_lazy.sh
 
 alias ec="emacsclient -c"
 
-[[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && source /usr/share/doc/pkgfile/command-not-found.zsh
+[[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && \
+    source /usr/share/doc/pkgfile/command-not-found.zsh
 
-if ! zplug check; then
-        printf "Install? [y/N]: "
-        if read -q; then
-                echo; zplug install
-        fi
-fi
-
-zplug load
