@@ -13,6 +13,10 @@ basics: yay
 	yay -Q - < meta/basic_deps || yay -S --needed - < meta/basic_deps
 	stow -t ~ $@
 
+x: yay
+	pacman -Q - < meta/x_deps || yay -S --needed - < meta/x_deps
+	stow -t ~ $@
+
 git:
 	pacman -Q git || sudo pacman -S git
 	stow -t ~ $@

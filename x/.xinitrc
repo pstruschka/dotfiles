@@ -1,3 +1,11 @@
+#!/bin/sh
+
+[ -f ~/.xprofile ] && . ~/.xprofile
+
+userresources=$HOME/.Xresources
+
+[ -f $userresources ] && xrdb -merge $userresources
+
 # set keyboard
 setxkbmap -layout us,us -variant ,dvp -option grp:shifts_toggle
 
