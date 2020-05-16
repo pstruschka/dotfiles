@@ -58,7 +58,7 @@ fi
 
 # fzf
 if type "fzf" > /dev/null && type "rg" > /dev/null; then
-    export FZF_DEFAULT_COMMAND="rg --hidden --follow --ignore-vcs --files --iglob '\!.git'"
+    export FZF_DEFAULT_COMMAND="rg --hidden --follow --ignore-vcs --files --iglob '!.git'"
 fi
 
 # Aliases
