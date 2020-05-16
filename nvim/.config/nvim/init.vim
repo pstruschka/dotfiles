@@ -23,6 +23,7 @@ Plug 'mileszs/ack.vim'
 Plug 'terryma/vim-multiple-cursors'
 
 Plug 'w0rp/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'lyuts/vim-rtags'
 
@@ -77,12 +78,13 @@ elseif executable('ag')
   let g:ackprg = 'ag --vimgrep'
 endif
 
+source $HOME/.config/nvim/modules/coc.vim
+
 "leader
 let mapleader = " "
 noremap <silent> <Leader> :WhichKey '<Space>'<CR>
 set timeoutlen=500
 
-noremap <silent> <Leader>w :Whichkey '<C-w>'<CR>
 
 "keys
 map <leader>ff :Files<CR>
