@@ -63,6 +63,8 @@
   (set-popup-rule! "^\\*Ilist"
     :side 'right :size 35 :quit nil :select nil :ttl 0))
 
+(setf tramp-shell-prompt-pattern "\\(?:^\\|^M\\)[^]#$%>\n]*#?[]#$%>].* *\\(^[\\[[0-9;]*[a-zA-Z] *\\)*")
+
 ;;(map! :leader
 ;;      (:prefix-map ("/" . "search"))
 ;;      (:when (featurep! :ui workspaces)
