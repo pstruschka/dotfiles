@@ -25,7 +25,6 @@ zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
 
 # THEME
-POWERLEVEL9K_INSTALLATION_PATH=$ANTIGEN_BUNDLES/bhilburn/powerlevel9k
 POWERLEVEL9K_PROMPT_ON_NEWLINE=true
 POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
 # POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="↳ "
@@ -59,8 +58,8 @@ fpath+=~/.zfunc
 autoload -Uz compinit
 compinit
 
-[ -z $ZSH ] || ( [ -e $ZSH/oh-my-zsh.sh ] && \
-    source $ZSH/oh-my-zsh.sh )
+[ -n $ZSH ] && [ -e $ZSH/oh-my-zsh.sh ] && \
+    source $ZSH/oh-my-zsh.sh
 
 if [ "$TERM" = "linux" ]; then
     _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
@@ -104,3 +103,4 @@ alias ec="emacsclient -c"
 
 [[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && \
     source /usr/share/doc/pkgfile/command-not-found.zsh
+
