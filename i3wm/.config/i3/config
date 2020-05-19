@@ -12,7 +12,7 @@
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always --no-startup-id xautolock -locker "$HOME/.local/bin/lock.sh" -time 60 -detectsleep -notify 10
 exec --no-startup-id nm-applet
-exec --no-startup-id compton
+exec --no-startup-id picom
 
 set $mod Mod4
 #exec_always --no-startup-id feh --bg-scale $HOME/.local/share/images/wallpaper.jpg

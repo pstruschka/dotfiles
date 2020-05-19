@@ -7,5 +7,6 @@ python-click
 python-dbus
 python-spotipy
 ffmpeg
+picom
 polybar
 xorg-xdpyinfo
