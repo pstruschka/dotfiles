@@ -1,5 +1,5 @@
 all_files := basics emacs spacemacs doom-emacs git i3wm bspwm vim nvim tmux x zsh fish
-simple_files := emacs spacemacs doom-emacs vim x fish
+simple_files := emacs spacemacs doom-emacs vim fish
 
 
 .PHONY: $(all_files) zplug
