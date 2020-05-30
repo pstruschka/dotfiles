@@ -1,3 +1,10 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#fi
+
 # zplug
 source ~/.zplug/init.zsh
 
@@ -53,10 +60,10 @@ fi
 
 zplug load
 
-fpath+=~/.zfunc
+fpath+=$XDG_DATA_DIR/zsh/functions
 
 autoload -Uz compinit
-compinit
+compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 
 [ -n $ZSH ] && [ -e $ZSH/oh-my-zsh.sh ] && \
     source $ZSH/oh-my-zsh.sh
@@ -104,3 +111,5 @@ alias ec="emacsclient -c"
 [[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && \
     source /usr/share/doc/pkgfile/command-not-found.zsh
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+#[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
