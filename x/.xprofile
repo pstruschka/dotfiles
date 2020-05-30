@@ -1,4 +1,0 @@
-#!/bin/sh
-
-xwallpaper --zoom ~/.local/share/images/wallpaper.jpg
-

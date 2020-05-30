@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# set keyboard
+setxkbmap -layout us,us -variant ,dvp -option grp:shifts_toggle
+xset r rate 300 50
+
+# set wallpaper
+xwallpaper --zoom ${XDG_DATA_HOME}/images/wallpaper.jpg
+
+# load Xresources
+userresources=${XDG_CONFIG_HOME}/X/Xresources
+[ -f $userresources ] && xrdb -load $userresources
+
+# systemd user
+systemctl --user import-environment DISPLAY XAUTHORITY
+
+if command -v dbus-update-activation-environment >/dev/null 2>&1; then
+    dbus-update-activation-environment DISPLAY XAUTHORITY
+fi
+

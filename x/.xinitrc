@@ -1,19 +1,7 @@
 #!/bin/sh
 
-[ -f ~/.xprofile ] && . ~/.xprofile
-
-userresources=$HOME/.Xresources
-
-[ -f $userresources ] && xrdb -merge $userresources
-
-# set keyboard
-setxkbmap -layout us,us -variant ,dvp -option grp:shifts_toggle
-
-# load Xresources
-[[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
-
-# Set display
-systemctl --user import-environment DISPLAY
+xprofile=${XDG_CONFIG_HOME}/X/xprofile
+[ -f  $xprofile ] && . $xprofile
 
 #exec startxfce4
 exec i3
