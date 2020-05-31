@@ -1,6 +1,6 @@
 #!/bin/sh
 
-xprofile=${XDG_CONFIG_HOME}/X/xprofile
+xprofile=${XDG_CONFIG_HOME}/X11/xprofile
 [ -f  $xprofile ] && . $xprofile
 
 #exec startxfce4

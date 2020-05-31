@@ -10,4 +10,4 @@
 #include "gruvbox-dark.xresources"
 
 *.alpha: 0.8
-*.font: monospace:size=12
+*.font: monospace:size=8
