@@ -1,80 +1,106 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+autoload -U colors && colors	# Load colors
+setopt autocd		# Automatically cd into typed directory.
+stty stop undef		# Disable ctrl-s to freeze terminal.
 
-# zplug
-source ~/.zplug/init.zsh
+# History
+HISTFILE="$XDG_CACHE_HOME/zsh/history"
+HISTSIZE=50000
+SAVEHIST=10000
+setopt extended_history       # record timestamp of command in HISTFILE
+setopt hist_expire_dups_first # delete duplicates first when HISTFILE size exceeds HISTSIZE
+setopt hist_ignore_dups       # ignore duplicated commands history list
+setopt hist_ignore_space      # ignore commands that start with space
+setopt hist_verify            # show command with history expansion to user before running it
+setopt share_history
 
-# oh my zsh stuff
+fpath+=$XDG_DATA_HOME/zsh/functions
 
-zplug "plugins/archlinux", from:oh-my-zsh
-zplug "plugins/command-not-found", from:oh-my-zsh
-zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/git", from:oh-my-zsh
-zplug "plugins/git-extras", from:oh-my-zsh
-zplug "plugins/pip", from:oh-my-zsh
-zplug "plugins/rsync", from:oh-my-zsh
-zplug "plugins/sublime", from:oh-my-zsh
-zplug "plugins/systemd", from:oh-my-zsh
-zplug "plugins/taskwarrior", from:oh-my-zsh
-zplug "plugins/thefuck", from:oh-my-zsh
-zplug "plugins/tmux", from:oh-my-zsh
-zplug "plugins/virtualenvwrapper", from:oh-my-zsh
-zplug "plugins/zsh-navigation-tools", from:oh-my-zsh
-zplug "plugins/colored-man-pages", from:oh-my-zsh
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
 
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-history-substring-search"
+[[ -n "${key[Up]}"   ]] && bindkey -- "${key[Up]}"   up-line-or-beginning-search
+[[ -n "${key[Down]}" ]] && bindkey -- "${key[Down]}" down-line-or-beginning-search
 
-# THEME
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=""
-# POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="↳ "
-POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
-POWERLEVEL9K_MODE='awesome-fontconfig'
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=3
-
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(os_icon context virtualenv dir dir_writable vcs)
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time root_indicator background_jobs history time)
-
-# zplug theme https://gist.github.com/pstruschka/c05686e6cf10e12471a3104e42e6366b.git agnoster_custom
-
-#[ "$TERM" = "linux" ] || zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
-case "$TERM" in
-    "linux") ;;
-    "dumb") export PS1="> ";;
-    *) zplug romkatv/powerlevel10k, use:powerlevel10k.zsh-theme
-esac
-
-if ! zplug check; then
-    printf "Install? [y/N]: "
-    if read -q; then
-        echo; zplug install
-    fi
-fi
-
-zplug load
-
-fpath+=$XDG_DATA_DIR/zsh/functions
-
+# Completion
+zmodload zsh/complist
 autoload -Uz compinit
+unsetopt menu_complete   # do not autoselect the first completion entry
+unsetopt flowcontrol
+setopt auto_menu         # show completion menu on successive tab press
+setopt complete_in_word
+setopt always_to_end
+bindkey -M menuselect '^o' accept-and-infer-next-history
+zstyle ':completion:*' menu select
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' use-cache yes
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh"
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}' 'r:|=*' 'l:|=* r:|=*'
+autoload -Uz complist
+setopt COMPLETE_ALIASES
 compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
+_comp_options+=(globdots)
 
-[ -n $ZSH ] && [ -e $ZSH/oh-my-zsh.sh ] && \
-    source $ZSH/oh-my-zsh.sh
+autoload -U +X bashcompinit && bashcompinit
 
-if [ "$TERM" = "linux" ]; then
-    _SEDCMD='s/.*\*color\([0-9]\{1,\}\).*#\([0-9a-fA-F]\{6\}\).*/\1 \2/p'
-    for i in $(sed -n "$_SEDCMD" $HOME/.Xresources | awk '$1 < 16 {printf "\\e]P%X%s", $1, $2}'); do
-        echo -en "$i"
-    done
-    clear
+# Keys
+bindkey -e
+
+
+# Dirstack
+autoload -Uz add-zsh-hook
+
+DIRSTACKFILE="$XDG_CACHE_HOME/zsh/dirs"
+if [[ -f "$DIRSTACKFILE" ]] && (( ${#dirstack} == 0 )); then
+    dirstack=("${(@f)"$(< "$DIRSTACKFILE")"}")
+    [[ -d "${dirstack[1]}" ]] && cd -- "${dirstack[1]}"
 fi
+chpwd_dirstack() {
+    print -l -- "$PWD" "${(u)dirstack[@]}" > "$DIRSTACKFILE"
+}
+add-zsh-hook -Uz chpwd chpwd_dirstack
+
+DIRSTACKSIZE='20'
+
+setopt AUTO_PUSHD PUSHD_SILENT PUSHD_TO_HOME
+
+## Remove duplicate entries
+setopt PUSHD_IGNORE_DUPS
+
+## This reverts the +/- operators.
+setopt PUSHD_MINUS
+
+alias -g ...='../..'
+alias -g ....='../../..'
+alias -g .....='../../../..'
+alias -g ......='../../../../..'
+
+alias -- -='cd -'
+alias 1='cd -'
+alias 2='cd -2'
+alias 3='cd -3'
+alias 4='cd -4'
+alias 5='cd -5'
+alias 6='cd -6'
+alias 7='cd -7'
+alias 8='cd -8'
+alias 9='cd -9'
+
+alias md='mkdir -p'
+alias rd=rmdir
+
+function d () {
+    if [[ -n $1 ]]; then
+        dirs "$@"
+    else
+        dirs -v | head -10
+    fi
+}
+compdef _dirs d
+
+autoload -U edit-command-line
+zle -N edit-command-line
+bindkey '\C-x\C-e' edit-command-line
 
 if type "kitty" > /dev/null; then
     # Completion for kitty
@@ -101,15 +127,33 @@ if type "fasd" > /dev/null; then
     eval "$(fasd --init auto)"
 fi
 
+# fzf
+source /usr/share/fzf/completion.zsh
+source /usr/share/fzf/key-bindings.zsh
+
 # python virtualenvwrapper
-export WORKON_HOME=~/.virtualenvs
+export WORKON_HOME="$XDG_DATA_HOME/virtualenvs"
 [[ -e /usr/bin/virtualenvwrapper_lazy.sh ]] && \
     source /usr/bin/virtualenvwrapper_lazy.sh
-
-alias ec="emacsclient -c"
 
 [[ -e /usr/share/doc/pkgfile/command-not-found.zsh ]] && \
     source /usr/share/doc/pkgfile/command-not-found.zsh
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-#[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+# Aliases
+alias ec="emacsclient -c"
+
+# Source plugins
+source "$XDG_CONFIG_HOME/zsh/zsh_plugins.sh"
+
+# Switch based on TERM
+case "$TERM" in
+    "dumb")
+        PS1="> "
+        return;;
+    "linux")
+        PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~%{$fg[red]%}]%{$reset_color%}$%b "
+        return;;
+    *)
+        source <(antibody bundle romkatv/powerlevel10k)
+        [[ ! -f ~/.config/zsh/.p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh
+esac

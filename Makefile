@@ -2,7 +2,10 @@ all_files := basics emacs spacemacs doom-emacs git i3wm bspwm vim nvim tmux x zs
 simple_files := emacs spacemacs doom-emacs vim fish
 
 
-.PHONY: $(all_files) zplug
+.PHONY: $(all_files)
+
+MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
+BASE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 
 
 $(simple_files):
@@ -41,12 +44,12 @@ nvim:
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 	stow -t ~ $@
 
-zsh: basics zplug
+zsh: basics antibody
 	stow -t ~ $@
 
-zplug:
-	curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-
+antibody: $(BASE_DIR)/zsh/.config/zsh/zsh_plugins.txt
+	curl -sfL git.io/antibody | sh -s - -b $(BASE_DIR)/zsh/.local/bin
+	$(BASE_DIR)/zsh/.local/bin/antibody bundle < $(BASE_DIR)/zsh/.config/zsh/zsh_plugins.txt > $(BASE_DIR)/zsh/.config/zsh/zsh_plugins.sh
 
 
 $(addprefix uninstall_,$(all_files)):

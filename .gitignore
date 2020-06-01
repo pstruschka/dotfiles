@@ -1,5 +1,8 @@
 **/systemd/user/*.target.wants
 
+# Loaded by makefile
+zsh/.local/bin/antibody
 
 #specific repos
 yay/
+
