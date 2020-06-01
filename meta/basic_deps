@@ -2,11 +2,13 @@ acpi
 alacritty
 dunst
 emacs
+fzf
 kitty
 libnotify
 newsboat
 otf-fira-code
 otf-fira-mono
 otf-fira-sans
+python-virtualenvwrapper
 ranger
 rofi
