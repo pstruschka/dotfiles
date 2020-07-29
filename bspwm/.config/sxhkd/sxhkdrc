@@ -144,3 +144,8 @@ XF86Audio{Play,Pause,Next,Prev}
 
 super + shift + Delete
 	xautolock -locknow
+
+# scratchpad
+super + `
+	id=$(cat /tmp/scratchid)
+	bspc node $id --flag hidden; bspc node -f $id

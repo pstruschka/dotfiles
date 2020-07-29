@@ -1,18 +1,34 @@
 #! /bin/sh
 
 # reset polybar
-$HOME/.config/polybar/launch.sh &
+$HOME/.config/polybar/launch.sh bspwm
 
 # Autostart
-[[ ! $(pidof -x sxhkd) ]] && sxhkd &
-[[ ! $(pidof -x compton) ]] && compton &
-[[ ! $(pidof -x nm-applet) ]] && nm-applet &
-[[ ! $(pidof -x feh ) ]] && feh --bg-scale "$HOME/.local/share/images/wallpaper.jpg" &
+[ ! "$(pidof -x sxhkd)" ] && sxhkd &
+[ ! "$(pidof -x picom)" ] && picom &
+[ ! "$(pidof -x nm-applet)" ] && nm-applet &
 
 # locker
-[[ ! $(pidof -x xautolock) ]] && xautolock -locker "$HOME/.local/share/scripts/lock.sh" -time 60 -detectsleep -notify 10 &
+# [ ! "$(pidof -x xautolock)" ] && xautolock -locker "$HOME/.local/share/scripts/lock.sh" -time 60 -detectsleep -notify 10 &
+xset s 300 5
+xss-lock -n /usr/bin/xsecurelock/dimmer -l -- xsecurelock
 
-bspc monitor -d I II III IV V VI VII VIII IX X
+# setup monitor
+monitors=$(xrandr -q | grep " connected " | cut -d " " -f1)
+monitor_list=$(printf "%s" "$monitors" | tr '\n' ' ')
+num_monitors=$(echo "$monitors" | wc -w)
+case $num_monitors in
+    1)
+        bspc monitor -d I II III IV V VI VII VIII IX X ;;
+    2)
+        primary=$(echo "$monitor_list" | cut -d ' ' -f1)
+        secondary=$(echo "$monitor_list" | cut -d ' ' -f2)
+        echo "prim: $primary second: $secondary"
+        bspc monitor "$primary" -d I II III IV V
+        bspc monitor "$secondary" -d VI VII VII IX X
+        bspc wm -O "$primary" "$secondary" ;;
+    *)
+esac
 
 bspc config border_width         2
 bspc config window_gap          12
@@ -28,4 +44,4 @@ bspc rule -a Kupfer.py focus=on
 bspc rule -a Screenkey manage=off
 
 bspc rule -a scratchpad sticky=on state=floating hidden=on
-alacritty --class scratchpad,scratchpad -e ~/code/dotfiles/bspwm/.bin/scratch &
+alacritty --class scratchpad,scratchpad -e ~/.local/bin/scratch &

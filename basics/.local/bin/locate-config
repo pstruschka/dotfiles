@@ -1,24 +1,16 @@
-#! /usr/bin/env bash
+#!/bin/sh
 
 set -e
 
-CONFIG_FILES=`ls -1 ~/.local/share/config-files | cut -d "" -f 1 | sort -d`
-CONFIG_ARRAY=(`find ~/.local/share/config-files/ -maxdepth 1 -mindepth 1 -print0 | sort -z | xargs -r0 echo`)
+config_dir="$HOME/.local/share/config-files"
 
-INDEX=`echo "$CONFIG_FILES" | rofi -dmenu -format "i" -no-custom -mesg "Find config file for..."`
-[ -z "$INDEX" ] && exit 1
-SOURCE=${CONFIG_ARRAY[$INDEX]}
-#echo "$CONFIG_FILES"
-#for item in ${CONFIG_ARRAY[*]}
-#do
-#    printf " %s\n" $item
-#done
-# (https://stackoverflow.com/questions/59895/get-the-source-directory-of-a-bash-script-from-within-the-script-itself)
-while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
-    DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
-    SOURCE="$(readlink "$SOURCE")"
-    [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
-done
-DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null 2>&1 && pwd )"
+p="Config:"
 
-echo $SOURCE
+sel=$(find "$config_dir" -writable -type l | cut -d "/" -f 7- | sort -d | dmenu -p "$p" -l 20)
+ec=$?
+[ "$ec" -ne 0 ] && exit $ec
+
+target=$(readlink -f "${config_dir}/${sel}")
+
+echo "$target"
+

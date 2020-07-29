@@ -9,8 +9,10 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
-exec_always --no-startup-id $HOME/.config/polybar/launch.sh
-exec_always --no-startup-id xautolock -locker "$HOME/.local/bin/lock.sh" -time 60 -detectsleep -notify 10
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh i3
+exec_always --no-startup-id xset s 300 5
+exec_always --no-startup-id xss-lock -n /usr/bin/xsecurelock/dimmer -l -- xsecurelock
+#exec_always --no-startup-id xautolock -locker "$HOME/.local/bin/lock.sh" -time 60 -detectsleep -notify 10
 exec --no-startup-id nm-applet
 exec --no-startup-id picom
 
@@ -47,15 +49,16 @@ bindsym $mod+Return exec alacritty #kitty #i3-sensible-terminal
 bindsym $mod+Shift+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec --no-startup-id rofi -show drun
-bindsym $mod+x exec --no-startup-id rofi -show run
+#bindsym $mod+d exec --no-startup-id rofi -show drun
+#bindsym $mod+x exec --no-startup-id rofi -show run
 
 bindsym $mod+Tab exec --no-startup-id rofi -show window
 
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
-#bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id i3-dmenu-desktop
+bindsym $mod+x exec --no-startup-id dmenu_run
 
 # change focus
 bindsym $mod+j focus left
@@ -66,14 +69,16 @@ bindsym $mod+semicolon focus right
 # alternatively, you can use the cursor keys:
 bindsym $mod+Left workspace prev_on_output
 bindsym $mod+Shift+Left workspace prev
-bindsym $mod+Shift+j workspace prev
+bindsym $mod+Shift+j workspace prev_on_output
 bindsym $mod+Shift+Control+Left move workspace to output left
 
 bindsym $mod+Down focus down
 bindsym $mod+Up focus up
+bindsym $mod+o focus output right
+
 bindsym $mod+Right workspace next_on_output
 bindsym $mod+Shift+Right workspace next
-bindsym $mod+Shift+semicolon workspace next
+bindsym $mod+Shift+semicolon workspace next_on_output
 bindsym $mod+Shift+Control+Right move workspace to output right
 
 bindsym $mod+b workspace back_and_forth
@@ -242,7 +247,8 @@ bindsym XF86AudioNext exec playerctl next
 bindsym XF86AudioPrev exec playerctl previous
 
 
-bindsym $mod+Shift+l exec "xautolock -locknow"
+#bindsym $mod+Shift+l exec "xautolock -locknow"
+bindsym $mod+Shift+l exec "xset s activate"
 
 
 

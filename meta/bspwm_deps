@@ -9,3 +9,5 @@ python-spotipy
 ffmpeg
 polybar
 xorg-xdpyinfo
+xsecurelock
+xss-lock

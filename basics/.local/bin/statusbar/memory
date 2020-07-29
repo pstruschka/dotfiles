@@ -1,0 +1,22 @@
+#!/bin/sh
+
+meminfo=$(awk '
+/^MemTotal:/ {Total=$2*1024}
+/^MemAvailable:/ {Available=$2*1024}
+/^MemFree:/ {Free=$2*1024}
+/^Buffers:/ {Buffers=$2*1024}
+/^Cached:/ {Cached=$2*1024}
+/^SReclaimable:/ {SReclaimable=$2*1024}
+/^Shmem:/ {Shmem=$2*1024}
+END {
+print Total ":" Available ":" Free ":" Buffers ":" Cached ":" SReclaimable ":" Shmem}' /proc/meminfo)
+
+echo "$meminfo" |
+    while IFS=: read -r t a f b c sr sh; do
+        memfree=$(echo "$a $t" | awk '{printf "%.3f", ($1 / $2) * 100}')
+        memused=$(echo "$memfree" | awk '{printf "%.3f", (100 - $1)}')
+
+        # Percentage values
+        # TODO: other values, controllable by flags?
+        echo "$memfree $memused"
+    done

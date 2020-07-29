@@ -1,6 +1,6 @@
 #/bin/sh
 
 FILE=$(locate-config)
-[ -z "$FILE" ] && exit 1
+[ -z "$FILE" ] || [ ! -f "$FILE" ] && exit 1
 
-$EDITOR $FILE
+${TERMINAL} -e ${EDITOR} ${FILE}

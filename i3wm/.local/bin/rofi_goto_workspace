@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-NAME=`rofi_workspace_prompt`
-i3-msg workspace $NAME

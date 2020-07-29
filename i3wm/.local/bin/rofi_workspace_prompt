@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-
-echo `i3-msg -t get_workspaces | jq '.[].name' | sed 's/\"//g' | rofi -dmenu`

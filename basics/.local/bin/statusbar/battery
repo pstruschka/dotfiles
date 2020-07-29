@@ -1,0 +1,30 @@
+#!/bin/sh
+
+battery_path='/sys/class/power_supply/BAT0'
+
+percentage=$(head -n1 "${battery_path}/capacity")
+state=$(head -n1 "${battery_path}/status")
+rate=$([ -f "${battery_path}/current_now" ] &&
+           head -n1 "${battery_path}/current_now" ||
+               head -n1 "${battery_path}/power_now")
+volt=$(head -n1 "${battery_path}/voltage_now")
+now=$([ -f "${battery_path}/charge_now" ] &&
+          head -n1 "${battery_path}/charge_now" ||
+              head -n1 "${battery_path}/energy_now")
+max=$([ -f "${battery_path}/current_full" ] &&
+          head -n1 "${battery_path}/current_full" ||
+              head -n1 "${battery_path}/energy_full")
+cap=$([ "$state" = "Charging" ] &&
+          echo "$max $now" | awk '{printf "%d", $1 - $2}' ||
+              echo "$now")
+
+remaining=$( echo "$cap $volt" | awk '{printf "%f", $1/$2}' )
+current_rate=$( echo "$rate $volt" | awk '{printf "%f", $1/$2}' )
+seconds_remaining=$( [ "${current_rate#0.00}" = "$current_rate" ] &&
+                         echo "$remaining $current_rate" |
+                             awk '{printf "%d", 3600*$1/$2}' ||
+                 echo "0" )
+time_remaining=$( date -ud "@${seconds_remaining}" "+%H:%M:%S" )
+
+# TODO: more variable output with flags?
+echo "$state $percentage $time_remaining"

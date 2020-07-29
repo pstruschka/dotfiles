@@ -1,5 +1,7 @@
-all_files := basics emacs spacemacs doom-emacs git i3wm bspwm vim nvim tmux x zsh fish
+special_files := git nvim tmux zsh
 simple_files := emacs spacemacs doom-emacs vim fish
+pkg_dependent_files := basics i3wm bspwm herbstluftwm xmonad x polybar
+all_files := $(special_files) $(simple_files) $(pkg_dependent_files)
 
 
 .PHONY: $(all_files)
@@ -11,25 +13,13 @@ BASE_DIR := $(patsubst %/,%,$(dir $(MAKEFILE_PATH)))
 $(simple_files):
 	stow -t ~ $@
 
+$(pkg_dependent_files): yay
+	yay -Q - < meta/$@_deps || yay -S --needed - < meta/$@_deps
+	stow -t ~ $@
+
 # special install rules
-basics: yay
-	yay -Q - < meta/basic_deps || yay -S --needed - < meta/basic_deps
-	stow -t ~ $@
-
-x: yay
-	pacman -Q - < meta/x_deps || yay -S --needed - < meta/x_deps
-	stow -t ~ $@
-
 git:
 	pacman -Q git || sudo pacman -S git
-	stow -t ~ $@
-
-i3wm: yay
-	pacman -Q - < meta/i3wm_deps || yay -S --needed - < meta/i3wm_deps
-	stow -t ~ $@
-
-bspwm: yay
-	pacman -Q - < meta/bspwm_deps || yay -S --needed - < meta/bspwm_deps
 	stow -t ~ $@
 
 yay: git

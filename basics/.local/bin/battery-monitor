@@ -1,6 +1,41 @@
+#!/bin/sh
+
+battery_path='/sys/class/power_supply/BAT0'
+
+percentage=$(head -n1 "${battery_path}/capacity")
+state=$(head -n1 "${battery_path}/status")
+rate=$([ -f "${battery_path}/current_now" ] && head -n1 "${battery_path}/current_now" || head -n1 "${battery_path}/power_now")
+volt=$(head -n1 "${battery_path}/voltage_now")
+now=$([ -f "${battery_path}/charge_now" ] && head -n1 "${battery_path}/charge_now" || head -n1 "${battery_path}/energy_now")
+max=$([ -f "${battery_path}/current_full" ] && head -n1 "${battery_path}/current_full" || head -n1 "${battery_path}/energy_full")
+cap=$([ "$state" = "Charging" ] && printf "%d-%d\n" "${max}" "${now}" | bc || echo "${now}")
+
+remaining=$( printf "%d/%d\n" "${cap}" "${volt}" | bc -l )
+current_rate=$( printf "%d/%d\n" "${rate}" "${volt}" | bc -l )
+echo $( [ "${current_rate}" != "0" ] && echo "not zero" || echo "is zero" )
+seconds=$( [ "${current_rate}" != "0" ] && printf "3600*%f/%f\n" "${remaining}" "${current_rate}" | bc || echo "0")
+time_remaining=$( date -ud "@${seconds}" "+%H:%M:%S" )
+
+echo "percentage ${percentage}%"
+echo "state ${state}"
+echo "rate ${rate}"
+echo "volt ${volt}"
+echo "now ${now}"
+echo "max ${max}"
+echo "cap ${cap}"
+echo "remaining ${remaining}"
+echo "current_rate ${current_rate}"
+echo "seconds ${seconds}"
+echo "time ${time_remaining}"
+
+exit 0
+
 battery_level=`acpi -b | cut -d ' ' -f 4 | grep -o '[0-9]*'`
+battery_level=$(head -n1 /sys/class/power_supply/BAT0/capacity)
 battery_state=$(acpi | grep 'Battery' | sed 's/Battery\s[0-9]*: //' | sed 's/, [0-9][0-9]*\%.*//')
+battery_state=$(head -n1 /sys/class/power_supply/BAT0/status)
 battery_remaining=$(acpi | grep -oh '[0-9:]* remaining' | sed 's/:\w\w remaining$/ Minutes/'  | sed 's/00://' | sed 's/:/h /')
+kk
 
 if [ ! -f "/tmp/.battery" ]; then
     echo "$battery_level" > /tmp/.battery
@@ -18,12 +53,12 @@ checkBatteryLevel() {
         exit
     fi
 
-    if [ $battery_level -le 3 ]; then
+    if [ $battery_level -le 4 ]; then
         sudo systemctl suspend
-    elif [ $battery_level -le 5 ]; then
-        notify-send "Low Battery" "Your computer will suspend soon unless plugged into a power outlet." -u critical
+    elif [ $battery_level -le 7 ]; then
+        notify-send "Low Battery" "(${time_remaining}) Your computer will suspend soon unless plugged into a power outlet." -u critical
     elif [ $battery_level -le 10 ]; then
-        notify-send "Low Battery" "${battery_level}% (${battery_remaining}) of battery remaining." -u normal
+        notify-send "Low Battery" "${battery_level}% (${time_remaining}) of battery remaining." -u normal
     fi
 }
 

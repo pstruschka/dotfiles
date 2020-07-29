@@ -1,0 +1,5 @@
+python-click
+python-dbus
+python-spotipy
+polybar
+xorg-xdpyinfo
